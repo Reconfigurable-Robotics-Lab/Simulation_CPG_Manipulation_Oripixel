@@ -1,0 +1,2466 @@
+
+<mujoco model="oripixel">
+    <statistic center="0 0 0" extent="1"/>
+
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+        <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+        markrgb="0.8 0.8 0.8" width="300" height="300"/>
+        <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    </asset>
+
+    <visual>
+    <headlight diffuse="1 1 1" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <global azimuth="30" elevation="-35" offwidth="1920" offheight="1080"/>
+    </visual>
+
+    <!-- set some defaults for units and lighting -->
+    <compiler angle="degree" coordinate="local" />
+	<option timestep="0.0005" gravity="0 0 -9.81" integrator="Euler" solver="Newton" tolerance="1e-6" ls_iterations="30">
+		<flag contact="enable"/>
+	</option>
+    <size memory="200M"/>
+    <default>
+        <geom contype="0" conaffinity="0"/>
+    </default>
+
+    <worldbody>
+        <light pos="0 0 10" dir="0 0 -1" diffuse="1 1 1"/>  
+        <body name="floor" pos="0 0 0">
+            <geom name="floor" pos="0 0 0" size="0 0 1" type="plane" 
+                material="groundplane" rgba="0.5 0.5 0.5 0.5" contype= "1" conaffinity="1"/>
+                <site name="reference" pos="0 0 0" euler="0 0 0"/>
+            
+            <body name="0_force_seat" pos = "0.0 0.0 0" euler="0 0 0">
+                <geom name="0_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="0_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="0_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="0_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="0_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="0_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="0_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="0_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="0_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="0_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="0_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="0_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="0_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="0_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="0_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="0_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="0_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="0_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="0_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="0_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="0_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="0_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="0_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="0_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="0_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="0_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="0_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="0_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="0_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="0_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="0_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="0_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="0_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="0_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="0_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="0_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="0_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="0_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="0_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="0_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="0_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="0_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="0_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="1_force_seat" pos = "0.0 0.12 0" euler="0 0 0">
+                <geom name="1_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="1_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="1_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="1_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="1_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="1_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="1_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="1_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="1_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="1_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="1_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="1_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="1_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="1_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="1_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="1_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="1_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="1_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="1_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="1_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="1_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="1_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="1_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="1_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="1_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="1_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="1_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="1_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="1_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="1_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="1_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="1_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="1_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="1_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="1_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="1_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="1_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="1_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="1_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="1_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="1_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="1_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="1_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="2_force_seat" pos = "0.0 0.24 0" euler="0 0 0">
+                <geom name="2_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="2_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="2_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="2_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="2_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="2_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="2_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="2_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="2_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="2_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="2_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="2_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="2_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="2_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="2_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="2_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="2_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="2_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="2_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="2_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="2_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="2_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="2_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="2_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="2_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="2_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="2_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="2_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="2_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="2_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="2_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="2_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="2_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="2_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="2_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="2_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="2_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="2_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="2_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="2_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="2_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="2_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="2_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="3_force_seat" pos = "0.0 0.36 0" euler="0 0 0">
+                <geom name="3_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="3_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="3_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="3_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="3_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="3_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="3_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="3_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="3_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="3_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="3_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="3_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="3_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="3_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="3_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="3_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="3_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="3_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="3_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="3_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="3_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="3_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="3_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="3_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="3_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="3_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="3_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="3_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="3_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="3_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="3_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="3_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="3_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="3_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="3_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="3_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="3_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="3_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="3_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="3_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="3_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="3_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="3_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="4_force_seat" pos = "0.0 0.48 0" euler="0 0 0">
+                <geom name="4_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="4_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="4_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="4_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="4_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="4_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="4_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="4_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="4_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="4_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="4_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="4_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="4_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="4_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="4_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="4_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="4_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="4_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="4_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="4_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="4_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="4_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="4_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="4_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="4_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="4_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="4_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="4_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="4_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="4_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="4_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="4_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="4_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="4_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="4_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="4_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="4_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="4_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="4_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="4_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="4_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="4_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="4_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="5_force_seat" pos = "0.12 0.0 0" euler="0 0 0">
+                <geom name="5_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="5_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="5_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="5_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="5_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="5_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="5_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="5_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="5_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="5_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="5_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="5_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="5_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="5_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="5_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="5_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="5_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="5_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="5_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="5_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="5_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="5_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="5_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="5_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="5_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="5_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="5_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="5_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="5_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="5_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="5_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="5_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="5_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="5_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="5_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="5_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="5_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="5_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="5_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="5_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="5_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="5_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="5_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="6_force_seat" pos = "0.12 0.12 0" euler="0 0 0">
+                <geom name="6_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="6_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="6_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="6_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="6_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="6_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="6_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="6_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="6_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="6_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="6_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="6_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="6_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="6_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="6_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="6_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="6_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="6_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="6_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="6_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="6_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="6_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="6_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="6_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="6_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="6_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="6_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="6_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="6_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="6_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="6_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="6_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="6_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="6_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="6_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="6_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="6_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="6_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="6_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="6_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="6_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="6_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="6_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="7_force_seat" pos = "0.12 0.24 0" euler="0 0 0">
+                <geom name="7_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="7_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="7_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="7_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="7_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="7_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="7_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="7_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="7_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="7_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="7_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="7_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="7_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="7_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="7_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="7_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="7_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="7_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="7_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="7_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="7_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="7_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="7_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="7_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="7_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="7_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="7_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="7_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="7_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="7_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="7_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="7_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="7_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="7_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="7_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="7_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="7_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="7_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="7_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="7_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="7_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="7_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="7_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="8_force_seat" pos = "0.12 0.36 0" euler="0 0 0">
+                <geom name="8_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="8_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="8_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="8_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="8_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="8_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="8_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="8_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="8_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="8_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="8_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="8_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="8_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="8_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="8_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="8_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="8_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="8_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="8_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="8_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="8_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="8_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="8_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="8_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="8_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="8_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="8_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="8_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="8_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="8_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="8_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="8_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="8_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="8_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="8_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="8_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="8_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="8_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="8_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="8_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="8_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="8_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="8_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="9_force_seat" pos = "0.12 0.48 0" euler="0 0 0">
+                <geom name="9_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="9_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="9_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="9_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="9_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="9_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="9_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="9_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="9_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="9_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="9_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="9_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="9_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="9_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="9_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="9_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="9_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="9_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="9_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="9_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="9_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="9_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="9_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="9_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="9_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="9_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="9_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="9_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="9_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="9_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="9_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="9_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="9_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="9_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="9_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="9_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="9_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="9_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="9_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="9_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="9_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="9_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="9_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="10_force_seat" pos = "0.24 0.0 0" euler="0 0 0">
+                <geom name="10_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="10_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="10_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="10_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="10_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="10_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="10_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="10_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="10_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="10_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="10_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="10_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="10_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="10_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="10_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="10_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="10_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="10_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="10_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="10_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="10_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="10_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="10_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="10_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="10_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="10_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="10_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="10_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="10_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="10_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="10_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="10_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="10_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="10_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="10_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="10_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="10_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="10_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="10_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="10_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="10_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="10_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="10_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="11_force_seat" pos = "0.24 0.12 0" euler="0 0 0">
+                <geom name="11_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="11_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="11_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="11_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="11_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="11_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="11_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="11_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="11_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="11_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="11_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="11_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="11_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="11_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="11_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="11_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="11_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="11_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="11_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="11_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="11_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="11_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="11_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="11_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="11_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="11_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="11_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="11_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="11_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="11_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="11_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="11_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="11_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="11_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="11_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="11_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="11_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="11_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="11_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="11_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="11_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="11_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="11_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="12_force_seat" pos = "0.24 0.24 0" euler="0 0 0">
+                <geom name="12_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="12_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="12_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="12_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="12_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="12_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="12_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="12_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="12_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="12_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="12_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="12_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="12_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="12_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="12_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="12_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="12_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="12_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="12_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="12_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="12_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="12_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="12_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="12_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="12_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="12_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="12_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="12_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="12_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="12_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="12_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="12_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="12_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="12_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="12_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="12_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="12_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="12_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="12_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="12_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="12_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="12_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="12_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="13_force_seat" pos = "0.24 0.36 0" euler="0 0 0">
+                <geom name="13_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="13_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="13_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="13_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="13_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="13_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="13_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="13_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="13_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="13_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="13_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="13_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="13_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="13_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="13_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="13_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="13_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="13_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="13_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="13_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="13_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="13_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="13_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="13_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="13_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="13_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="13_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="13_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="13_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="13_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="13_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="13_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="13_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="13_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="13_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="13_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="13_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="13_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="13_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="13_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="13_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="13_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="13_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="14_force_seat" pos = "0.24 0.48 0" euler="0 0 0">
+                <geom name="14_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="14_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="14_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="14_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="14_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="14_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="14_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="14_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="14_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="14_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="14_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="14_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="14_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="14_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="14_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="14_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="14_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="14_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="14_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="14_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="14_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="14_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="14_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="14_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="14_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="14_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="14_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="14_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="14_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="14_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="14_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="14_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="14_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="14_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="14_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="14_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="14_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="14_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="14_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="14_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="14_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="14_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="14_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="15_force_seat" pos = "0.36 0.0 0" euler="0 0 0">
+                <geom name="15_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="15_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="15_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="15_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="15_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="15_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="15_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="15_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="15_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="15_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="15_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="15_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="15_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="15_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="15_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="15_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="15_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="15_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="15_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="15_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="15_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="15_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="15_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="15_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="15_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="15_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="15_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="15_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="15_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="15_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="15_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="15_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="15_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="15_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="15_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="15_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="15_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="15_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="15_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="15_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="15_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="15_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="15_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="16_force_seat" pos = "0.36 0.12 0" euler="0 0 0">
+                <geom name="16_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="16_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="16_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="16_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="16_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="16_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="16_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="16_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="16_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="16_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="16_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="16_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="16_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="16_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="16_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="16_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="16_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="16_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="16_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="16_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="16_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="16_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="16_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="16_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="16_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="16_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="16_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="16_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="16_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="16_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="16_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="16_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="16_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="16_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="16_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="16_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="16_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="16_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="16_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="16_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="16_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="16_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="16_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="17_force_seat" pos = "0.36 0.24 0" euler="0 0 0">
+                <geom name="17_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="17_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="17_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="17_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="17_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="17_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="17_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="17_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="17_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="17_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="17_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="17_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="17_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="17_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="17_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="17_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="17_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="17_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="17_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="17_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="17_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="17_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="17_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="17_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="17_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="17_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="17_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="17_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="17_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="17_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="17_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="17_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="17_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="17_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="17_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="17_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="17_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="17_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="17_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="17_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="17_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="17_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="17_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="18_force_seat" pos = "0.36 0.36 0" euler="0 0 0">
+                <geom name="18_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="18_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="18_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="18_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="18_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="18_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="18_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="18_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="18_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="18_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="18_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="18_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="18_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="18_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="18_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="18_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="18_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="18_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="18_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="18_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="18_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="18_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="18_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="18_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="18_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="18_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="18_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="18_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="18_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="18_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="18_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="18_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="18_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="18_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="18_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="18_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="18_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="18_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="18_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="18_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="18_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="18_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="18_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="19_force_seat" pos = "0.36 0.48 0" euler="0 0 0">
+                <geom name="19_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="19_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="19_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="19_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="19_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="19_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="19_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="19_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="19_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="19_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="19_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="19_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="19_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="19_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="19_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="19_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="19_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="19_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="19_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="19_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="19_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="19_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="19_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="19_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="19_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="19_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="19_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="19_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="19_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="19_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="19_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="19_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="19_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="19_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="19_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="19_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="19_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="19_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="19_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="19_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="19_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="19_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="19_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="20_force_seat" pos = "0.48 0.0 0" euler="0 0 0">
+                <geom name="20_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="20_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="20_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="20_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="20_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="20_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="20_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="20_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="20_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="20_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="20_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="20_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="20_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="20_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="20_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="20_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="20_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="20_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="20_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="20_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="20_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="20_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="20_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="20_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="20_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="20_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="20_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="20_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="20_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="20_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="20_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="20_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="20_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="20_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="20_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="20_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="20_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="20_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="20_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="20_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="20_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="20_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="20_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="21_force_seat" pos = "0.48 0.12 0" euler="0 0 0">
+                <geom name="21_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="21_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="21_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="21_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="21_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="21_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="21_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="21_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="21_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="21_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="21_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="21_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="21_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="21_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="21_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="21_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="21_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="21_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="21_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="21_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="21_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="21_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="21_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="21_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="21_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="21_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="21_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="21_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="21_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="21_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="21_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="21_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="21_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="21_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="21_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="21_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="21_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="21_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="21_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="21_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="21_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="21_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="21_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="22_force_seat" pos = "0.48 0.24 0" euler="0 0 0">
+                <geom name="22_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="22_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="22_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="22_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="22_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="22_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="22_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="22_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="22_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="22_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="22_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="22_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="22_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="22_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="22_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="22_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="22_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="22_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="22_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="22_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="22_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="22_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="22_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="22_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="22_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="22_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="22_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="22_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="22_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="22_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="22_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="22_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="22_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="22_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="22_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="22_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="22_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="22_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="22_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="22_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="22_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="22_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="22_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="23_force_seat" pos = "0.48 0.36 0" euler="0 0 0">
+                <geom name="23_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="23_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="23_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="23_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="23_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="23_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="23_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="23_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="23_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="23_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="23_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="23_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="23_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="23_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="23_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="23_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="23_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="23_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="23_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="23_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="23_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="23_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="23_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="23_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="23_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="23_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="23_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="23_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="23_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="23_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="23_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="23_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="23_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="23_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="23_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="23_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="23_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="23_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="23_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="23_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="23_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="23_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="23_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+
+            <body name="24_force_seat" pos = "0.48 0.48 0" euler="0 0 0">
+                <geom name="24_force_seat" type="box" size="30e-3 30e-3 1.5e-3" pos="0 0 0" euler="0 0 0" mass="100e-3"/>
+
+                <!-- 1st Leg-->
+                <body name="24_body_1_seat" pos="-0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="24_body_1_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="24_ft_sensor_bottom_1" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="24_name_body_arm_1_1" pos="0 0 0.035" euler="0 0 -120">
+                        <joint name="24_joint_1_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="24_body_arm_1_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="24_body_arm_1_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="24_joint_1_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="24_joint_1_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="24_joint_1_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="24_body_arm_1_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="24_body_arm_1_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="24_joint_1_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>    
+                                <geom name="24_body_arm_1_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+
+                            </body>  
+                        </body>
+                    </body>    
+                </body>
+
+                <!-- 2nd Leg-->
+                <body name="24_body_2_seat" pos="0.0175 0.0101 0.0200" euler="0 0 0">
+                    <geom name="24_body_2_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="24_ft_sensor_bottom_2" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="24_body_arm_2_1" pos="0 0 0.035" euler="0 0 120">
+                        <joint name="24_joint_2_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="24_body_arm_2_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+                        
+                        <body name="24_body_arm_2_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="24_joint_2_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="24_joint_2_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="24_joint_2_12_z" type="hinge" axis="0 0 1" pos="0 0 0" /> 
+                            <geom name="24_body_arm_2_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="24_body_arm_2_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="24_joint_2_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>   
+                                <geom name="24_body_arm_2_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+
+                <!-- 3rd Leg-->
+                <body name="24_body_3_seat" pos="0.0000 -0.0202 0.0200" euler="0 0 0">
+                    <geom name="24_body_3_seat" type="box" size="5e-3 5e-3 20e-3" pos="0 0 0" rgba="0.1 0.8 0.8 1"/>
+                    <site name="24_ft_sensor_bottom_3" pos="0 0 -20e-3" euler="0 0 -150"/>
+
+                    <body name="24_body_arm_3_1" pos="0 0 0.035" euler="0 0 0">
+                        <joint name="24_joint_3_01" type="hinge" axis="1 0 0" pos="0 0 -0.015" limited="true" range="1 89" stiffness= "0.2" damping="0.1" solreflimit="1e-8 3"/> 
+                        <geom name="24_body_arm_3_1" type="cylinder" size="1.5e-3 0.015" pos="0 0 0" mass="5e-3" rgba="1 1 0 1"/>
+
+                        <body name="24_body_arm_3_2" pos="0 0 0.015" euler="0 0 180">
+                            <joint name="24_joint_3_12_x" type="hinge" axis="1 0 0" pos="0 0 0" limited="true" range="1 179" solreflimit="1e-8 3"/> 
+                            <joint name="24_3_12_y" type="hinge" axis="0 1 0" pos="0 0 0" limited="true" range="-45 45" solreflimit="1e-8 3"/> 
+                            <joint name="24_joint_3_12_z" type="hinge" axis="0 0 1" pos="0 0 0" />
+                            <geom name="24_body_arm_3_2" type="cylinder" size="1.5e-3 0.015" pos="0 0 0.015" mass="5e-3" rgba="0 0 1 1"/>
+
+                            <body name="24_body_arm_3_3" pos="0 0 0.040105" euler="0 0 0">
+                                <joint name="24_joint_3_23_x" type="hinge" axis="1 0 0" pos="0 0 -0.010105" limited="true" range="1 89" solreflimit="1e-8 3"/>  
+                                <geom name="24_body_arm_3_3" type="cylinder" size="1.5e-3 0.010105" pos="0 0 0" mass="5e-3" rgba="1 0 1 1"/>
+                                
+                            </body>  
+                        </body>
+                    </body>  
+                </body>
+            </body>
+<!-- BODY PLACEHOLDER for the GENERATED_XML -->
+
+        </body>
+
+    
+    <body name="0_top_plate" pos="0.0 0.0 0.12171" euler="0 0 0">  
+        <joint name = "0_joint_top" type = "free"/>
+        <geom name="0_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="0_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="1_top_plate" pos="0.0 0.12 0.12171" euler="0 0 0">  
+        <joint name = "1_joint_top" type = "free"/>
+        <geom name="1_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="1_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="2_top_plate" pos="0.0 0.24 0.12171" euler="0 0 0">  
+        <joint name = "2_joint_top" type = "free"/>
+        <geom name="2_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="2_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="3_top_plate" pos="0.0 0.36 0.12171" euler="0 0 0">  
+        <joint name = "3_joint_top" type = "free"/>
+        <geom name="3_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="3_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="4_top_plate" pos="0.0 0.48 0.12171" euler="0 0 0">  
+        <joint name = "4_joint_top" type = "free"/>
+        <geom name="4_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="4_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="5_top_plate" pos="0.12 0.0 0.12171" euler="0 0 0">  
+        <joint name = "5_joint_top" type = "free"/>
+        <geom name="5_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="5_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="6_top_plate" pos="0.12 0.12 0.12171" euler="0 0 0">  
+        <joint name = "6_joint_top" type = "free"/>
+        <geom name="6_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="6_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="7_top_plate" pos="0.12 0.24 0.12171" euler="0 0 0">  
+        <joint name = "7_joint_top" type = "free"/>
+        <geom name="7_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="7_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="8_top_plate" pos="0.12 0.36 0.12171" euler="0 0 0">  
+        <joint name = "8_joint_top" type = "free"/>
+        <geom name="8_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="8_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="9_top_plate" pos="0.12 0.48 0.12171" euler="0 0 0">  
+        <joint name = "9_joint_top" type = "free"/>
+        <geom name="9_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="9_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="10_top_plate" pos="0.24 0.0 0.12171" euler="0 0 0">  
+        <joint name = "10_joint_top" type = "free"/>
+        <geom name="10_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="10_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="11_top_plate" pos="0.24 0.12 0.12171" euler="0 0 0">  
+        <joint name = "11_joint_top" type = "free"/>
+        <geom name="11_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="11_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="12_top_plate" pos="0.24 0.24 0.12171" euler="0 0 0">  
+        <joint name = "12_joint_top" type = "free"/>
+        <geom name="12_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="12_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="13_top_plate" pos="0.24 0.36 0.12171" euler="0 0 0">  
+        <joint name = "13_joint_top" type = "free"/>
+        <geom name="13_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="13_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="14_top_plate" pos="0.24 0.48 0.12171" euler="0 0 0">  
+        <joint name = "14_joint_top" type = "free"/>
+        <geom name="14_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="14_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="15_top_plate" pos="0.36 0.0 0.12171" euler="0 0 0">  
+        <joint name = "15_joint_top" type = "free"/>
+        <geom name="15_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="15_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="16_top_plate" pos="0.36 0.12 0.12171" euler="0 0 0">  
+        <joint name = "16_joint_top" type = "free"/>
+        <geom name="16_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="16_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="17_top_plate" pos="0.36 0.24 0.12171" euler="0 0 0">  
+        <joint name = "17_joint_top" type = "free"/>
+        <geom name="17_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="17_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="18_top_plate" pos="0.36 0.36 0.12171" euler="0 0 0">  
+        <joint name = "18_joint_top" type = "free"/>
+        <geom name="18_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="18_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="19_top_plate" pos="0.36 0.48 0.12171" euler="0 0 0">  
+        <joint name = "19_joint_top" type = "free"/>
+        <geom name="19_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="19_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="20_top_plate" pos="0.48 0.0 0.12171" euler="0 0 0">  
+        <joint name = "20_joint_top" type = "free"/>
+        <geom name="20_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="20_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="21_top_plate" pos="0.48 0.12 0.12171" euler="0 0 0">  
+        <joint name = "21_joint_top" type = "free"/>
+        <geom name="21_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="21_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="22_top_plate" pos="0.48 0.24 0.12171" euler="0 0 0">  
+        <joint name = "22_joint_top" type = "free"/>
+        <geom name="22_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="22_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="23_top_plate" pos="0.48 0.36 0.12171" euler="0 0 0">  
+        <joint name = "23_joint_top" type = "free"/>
+        <geom name="23_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="23_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+
+    <body name="24_top_plate" pos="0.48 0.48 0.12171" euler="0 0 0">  
+        <joint name = "24_joint_top" type = "free"/>
+        <geom name="24_top_plate" type="box" size="0.05 0.05 0.002" pos="0 0 0" euler="0 0 0" mass="100e-3" rgba="0.8 0 0 0.4"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+        <site name="24_touch" type="box" size="0.05 0.05 0.002" pos="0 0 0"/>
+    </body>  
+<!-- TOP_PLATE PLACEHOLDER for the GENERATED_XML -->
+    
+    <body name="0_object" pos="0.2 0.0 0.14171" euler="0 0 0">  
+        <joint name = "0_joint_object" type = "free"/>
+        <geom name="0_object" type="box" size="0.15 0.15 0.005" pos="0 0 0" euler="0 0 0" mass="0.264" rgba=".9 .9 .1 0.7"
+                    contype= "1" conaffinity="1" condim="3" friction="0.5 0.5 0.01" solref="0.01 1" solimp=".95 .99 .0001"/>
+    </body>  
+<!-- OBJECT PLACEHOLDER for the GENERATED_XML -->
+    </worldbody>
+
+    <equality>
+        
+        <weld name=" 0_weld_1_top" body1="0_body_arm_1_3" active="true" body2="0_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 0_weld_2_top" body1="0_body_arm_2_3" active="true" body2="0_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 0_weld_3_top" body1="0_body_arm_3_3" active="true" body2="0_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 1_weld_1_top" body1="1_body_arm_1_3" active="true" body2="1_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 1_weld_2_top" body1="1_body_arm_2_3" active="true" body2="1_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 1_weld_3_top" body1="1_body_arm_3_3" active="true" body2="1_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 2_weld_1_top" body1="2_body_arm_1_3" active="true" body2="2_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 2_weld_2_top" body1="2_body_arm_2_3" active="true" body2="2_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 2_weld_3_top" body1="2_body_arm_3_3" active="true" body2="2_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 3_weld_1_top" body1="3_body_arm_1_3" active="true" body2="3_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 3_weld_2_top" body1="3_body_arm_2_3" active="true" body2="3_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 3_weld_3_top" body1="3_body_arm_3_3" active="true" body2="3_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 4_weld_1_top" body1="4_body_arm_1_3" active="true" body2="4_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 4_weld_2_top" body1="4_body_arm_2_3" active="true" body2="4_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 4_weld_3_top" body1="4_body_arm_3_3" active="true" body2="4_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 5_weld_1_top" body1="5_body_arm_1_3" active="true" body2="5_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 5_weld_2_top" body1="5_body_arm_2_3" active="true" body2="5_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 5_weld_3_top" body1="5_body_arm_3_3" active="true" body2="5_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 6_weld_1_top" body1="6_body_arm_1_3" active="true" body2="6_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 6_weld_2_top" body1="6_body_arm_2_3" active="true" body2="6_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 6_weld_3_top" body1="6_body_arm_3_3" active="true" body2="6_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 7_weld_1_top" body1="7_body_arm_1_3" active="true" body2="7_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 7_weld_2_top" body1="7_body_arm_2_3" active="true" body2="7_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 7_weld_3_top" body1="7_body_arm_3_3" active="true" body2="7_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 8_weld_1_top" body1="8_body_arm_1_3" active="true" body2="8_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 8_weld_2_top" body1="8_body_arm_2_3" active="true" body2="8_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 8_weld_3_top" body1="8_body_arm_3_3" active="true" body2="8_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 9_weld_1_top" body1="9_body_arm_1_3" active="true" body2="9_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 9_weld_2_top" body1="9_body_arm_2_3" active="true" body2="9_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 9_weld_3_top" body1="9_body_arm_3_3" active="true" body2="9_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 10_weld_1_top" body1="10_body_arm_1_3" active="true" body2="10_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 10_weld_2_top" body1="10_body_arm_2_3" active="true" body2="10_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 10_weld_3_top" body1="10_body_arm_3_3" active="true" body2="10_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 11_weld_1_top" body1="11_body_arm_1_3" active="true" body2="11_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 11_weld_2_top" body1="11_body_arm_2_3" active="true" body2="11_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 11_weld_3_top" body1="11_body_arm_3_3" active="true" body2="11_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 12_weld_1_top" body1="12_body_arm_1_3" active="true" body2="12_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 12_weld_2_top" body1="12_body_arm_2_3" active="true" body2="12_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 12_weld_3_top" body1="12_body_arm_3_3" active="true" body2="12_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 13_weld_1_top" body1="13_body_arm_1_3" active="true" body2="13_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 13_weld_2_top" body1="13_body_arm_2_3" active="true" body2="13_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 13_weld_3_top" body1="13_body_arm_3_3" active="true" body2="13_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 14_weld_1_top" body1="14_body_arm_1_3" active="true" body2="14_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 14_weld_2_top" body1="14_body_arm_2_3" active="true" body2="14_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 14_weld_3_top" body1="14_body_arm_3_3" active="true" body2="14_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 15_weld_1_top" body1="15_body_arm_1_3" active="true" body2="15_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 15_weld_2_top" body1="15_body_arm_2_3" active="true" body2="15_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 15_weld_3_top" body1="15_body_arm_3_3" active="true" body2="15_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 16_weld_1_top" body1="16_body_arm_1_3" active="true" body2="16_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 16_weld_2_top" body1="16_body_arm_2_3" active="true" body2="16_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 16_weld_3_top" body1="16_body_arm_3_3" active="true" body2="16_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 17_weld_1_top" body1="17_body_arm_1_3" active="true" body2="17_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 17_weld_2_top" body1="17_body_arm_2_3" active="true" body2="17_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 17_weld_3_top" body1="17_body_arm_3_3" active="true" body2="17_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 18_weld_1_top" body1="18_body_arm_1_3" active="true" body2="18_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 18_weld_2_top" body1="18_body_arm_2_3" active="true" body2="18_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 18_weld_3_top" body1="18_body_arm_3_3" active="true" body2="18_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 19_weld_1_top" body1="19_body_arm_1_3" active="true" body2="19_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 19_weld_2_top" body1="19_body_arm_2_3" active="true" body2="19_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 19_weld_3_top" body1="19_body_arm_3_3" active="true" body2="19_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 20_weld_1_top" body1="20_body_arm_1_3" active="true" body2="20_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 20_weld_2_top" body1="20_body_arm_2_3" active="true" body2="20_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 20_weld_3_top" body1="20_body_arm_3_3" active="true" body2="20_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 21_weld_1_top" body1="21_body_arm_1_3" active="true" body2="21_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 21_weld_2_top" body1="21_body_arm_2_3" active="true" body2="21_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 21_weld_3_top" body1="21_body_arm_3_3" active="true" body2="21_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 22_weld_1_top" body1="22_body_arm_1_3" active="true" body2="22_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 22_weld_2_top" body1="22_body_arm_2_3" active="true" body2="22_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 22_weld_3_top" body1="22_body_arm_3_3" active="true" body2="22_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 23_weld_1_top" body1="23_body_arm_1_3" active="true" body2="23_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 23_weld_2_top" body1="23_body_arm_2_3" active="true" body2="23_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 23_weld_3_top" body1="23_body_arm_3_3" active="true" body2="23_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+
+        <weld name=" 24_weld_1_top" body1="24_body_arm_1_3" active="true" body2="24_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 0.3535534 0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 24_weld_2_top" body1="24_body_arm_2_3" active="true" body2="24_top_plate"
+            relpose="0 0 0.010105 -0.6123724 0.6123724 -0.3535534 -0.3535534" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+        <weld name=" 24_weld_3_top" body1="24_body_arm_3_3" active="true" body2="24_top_plate"
+            relpose="0 0 0.010105 0 0 0.7071068 0.7071068" anchor="0 0 0" torquescale="200" solref="1e-8 3" solimp="1 1 0.0001 0.95 6"/>
+<!-- EQUALITY PLACEHOLDER for the GENERATED_XML -->
+        <!-- CONNECT PLATE PLACEHOLDER for the GENERATED_XML -->
+	</equality>
+
+    <actuator>
+        
+        <position name="0_servo1_pos" joint="0_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="0_servo2_pos" joint="0_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="0_servo3_pos" joint="0_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="1_servo1_pos" joint="1_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="1_servo2_pos" joint="1_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="1_servo3_pos" joint="1_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="2_servo1_pos" joint="2_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="2_servo2_pos" joint="2_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="2_servo3_pos" joint="2_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="3_servo1_pos" joint="3_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="3_servo2_pos" joint="3_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="3_servo3_pos" joint="3_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="4_servo1_pos" joint="4_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="4_servo2_pos" joint="4_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="4_servo3_pos" joint="4_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="5_servo1_pos" joint="5_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="5_servo2_pos" joint="5_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="5_servo3_pos" joint="5_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="6_servo1_pos" joint="6_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="6_servo2_pos" joint="6_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="6_servo3_pos" joint="6_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="7_servo1_pos" joint="7_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="7_servo2_pos" joint="7_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="7_servo3_pos" joint="7_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="8_servo1_pos" joint="8_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="8_servo2_pos" joint="8_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="8_servo3_pos" joint="8_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="9_servo1_pos" joint="9_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="9_servo2_pos" joint="9_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="9_servo3_pos" joint="9_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="10_servo1_pos" joint="10_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="10_servo2_pos" joint="10_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="10_servo3_pos" joint="10_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="11_servo1_pos" joint="11_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="11_servo2_pos" joint="11_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="11_servo3_pos" joint="11_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="12_servo1_pos" joint="12_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="12_servo2_pos" joint="12_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="12_servo3_pos" joint="12_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="13_servo1_pos" joint="13_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="13_servo2_pos" joint="13_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="13_servo3_pos" joint="13_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="14_servo1_pos" joint="14_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="14_servo2_pos" joint="14_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="14_servo3_pos" joint="14_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="15_servo1_pos" joint="15_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="15_servo2_pos" joint="15_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="15_servo3_pos" joint="15_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="16_servo1_pos" joint="16_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="16_servo2_pos" joint="16_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="16_servo3_pos" joint="16_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="17_servo1_pos" joint="17_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="17_servo2_pos" joint="17_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="17_servo3_pos" joint="17_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="18_servo1_pos" joint="18_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="18_servo2_pos" joint="18_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="18_servo3_pos" joint="18_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="19_servo1_pos" joint="19_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="19_servo2_pos" joint="19_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="19_servo3_pos" joint="19_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="20_servo1_pos" joint="20_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="20_servo2_pos" joint="20_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="20_servo3_pos" joint="20_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="21_servo1_pos" joint="21_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="21_servo2_pos" joint="21_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="21_servo3_pos" joint="21_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="22_servo1_pos" joint="22_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="22_servo2_pos" joint="22_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="22_servo3_pos" joint="22_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="23_servo1_pos" joint="23_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="23_servo2_pos" joint="23_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="23_servo3_pos" joint="23_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+
+        <position name="24_servo1_pos" joint="24_joint_1_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="24_servo2_pos" joint="24_joint_2_01" kp="1" ctrlrange="0.1 1.57"/>
+        <position name="24_servo3_pos" joint="24_joint_3_01" kp="1" ctrlrange="0.1 1.57"/>
+<!-- ACTUATOR PLACEHOLDER for the GENERATED_XML -->
+    </actuator>
+
+    <contact>
+        <!-- FLOOR CONTACT PLACEHOLDER for the GENERATED_XML -->
+        <!-- PLATE CONTACT PLACEHOLDER for the GENERATED_XML -->
+        <!-- OBJECT CONTACT PLACEHOLDER for the GENERATED_XML -->
+    </contact>
+
+    <sensor>
+        
+        <touch name="0_touch" site="0_touch" />
+
+        <touch name="1_touch" site="1_touch" />
+
+        <touch name="2_touch" site="2_touch" />
+
+        <touch name="3_touch" site="3_touch" />
+
+        <touch name="4_touch" site="4_touch" />
+
+        <touch name="5_touch" site="5_touch" />
+
+        <touch name="6_touch" site="6_touch" />
+
+        <touch name="7_touch" site="7_touch" />
+
+        <touch name="8_touch" site="8_touch" />
+
+        <touch name="9_touch" site="9_touch" />
+
+        <touch name="10_touch" site="10_touch" />
+
+        <touch name="11_touch" site="11_touch" />
+
+        <touch name="12_touch" site="12_touch" />
+
+        <touch name="13_touch" site="13_touch" />
+
+        <touch name="14_touch" site="14_touch" />
+
+        <touch name="15_touch" site="15_touch" />
+
+        <touch name="16_touch" site="16_touch" />
+
+        <touch name="17_touch" site="17_touch" />
+
+        <touch name="18_touch" site="18_touch" />
+
+        <touch name="19_touch" site="19_touch" />
+
+        <touch name="20_touch" site="20_touch" />
+
+        <touch name="21_touch" site="21_touch" />
+
+        <touch name="22_touch" site="22_touch" />
+
+        <touch name="23_touch" site="23_touch" />
+
+        <touch name="24_touch" site="24_touch" />
+<!-- SENSOR PLACEHOLDER for the GENERATED_XML -->
+    </sensor>
+</mujoco>
+
