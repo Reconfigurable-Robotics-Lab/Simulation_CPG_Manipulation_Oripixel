@@ -203,13 +203,6 @@ xml_template_object = """
                     contype= "1" conaffinity="1" condim="3" friction="{{ contact_friction }}" solref="0.01 1" solimp=".95 .99 .0001"/>
     </body>  
 """
-xml_template_object_flex = """
-    <flexcomp type="grid" count="8 8 2" spacing=".05 .05 .01" pos="0.2 0.0 0.14171"
-              radius=".0" rgba="0 .7 .7 1" name="fabric_object" dim="3" mass=".5">
-      <contact condim="3" solref="0.01 1" solimp=".95 .99 .0001" selfcollide="none"/>
-      <elasticity young="5e4" damping=".01" poisson="0"/>
-    </flexcomp>
-"""
 
 xml_template_contact_floor = """
         <pair name="{{ object_number }}_object_contact_floor" geom1="floor" geom2="{{ object_number }}_object" margin = "{{ contact_margin }}" condim="3" friction="{{ contact_friction }}"/>
@@ -304,9 +297,6 @@ class Oripixel_manipulation():
         self.euler_object = euler_object
         self.mass_object = mass_object
         self.size_object = size_object
-        if self.object_material == "fabric":
-            self.size_object[0] = self.size_object[0]/15
-            self.size_object[1] = self.size_object[1]/15
         self.generate_object_contact = generate_object_contact
         self.object_number_group = []
 
@@ -437,11 +427,7 @@ class Oripixel_manipulation():
                             existing_xml_content = self._add_template_to_xml(existing_xml_content, xml_template_equality, data, equality_placeholder)
                             existing_xml_content = self._add_template_to_xml(existing_xml_content, xml_template_actuator, data, actuator_placeholder)
                             existing_xml_content = self._add_template_to_xml(existing_xml_content, xml_template_sensor, data, sensor_placeholder)
-                            if self.object_material == "rigid":
-                                existing_xml_content = self._add_template_to_xml(existing_xml_content, xml_template_object, data, object_placeholder)
-                            elif self.object_material == "fabric":
-                                existing_xml_content = self._add_template_to_xml(existing_xml_content, xml_template_object_flex, data, object_placeholder)
-                            # existing_xml_content = self._add_template_to_xml(existing_xml_content, xml_template_contact_floor, data, floor_contact_placeholder)
+                            existing_xml_content = self._add_template_to_xml(existing_xml_content, xml_template_object, data, object_placeholder)
                             object_number_list.append(object_number)
                             self.object_number_group.append(object_number)
                             module_number += 1
@@ -717,10 +703,8 @@ class Oripixel_manipulation():
                 joints_pos.extend(temp_joint_angle)
 
         for i in self.object_number_group:
-            if self.object_material == "fabric":
-                object_name = "fabric_object_112"
-            else:
-                object_name = f"{i}_object"
+
+            object_name = f"{i}_object"
 
             temp_object_pos = self.data.body(object_name).xpos
             temp_object_rot = R.from_matrix(
