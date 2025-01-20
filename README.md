@@ -3,7 +3,7 @@
 This repository includes the supplementary material for paper "CPG-Based Manipulation with Multi-Module Origami Robot Surface".
 
 ## Files Description
-- Oripixel.py - Code for generating simulation model
+- Oripixel.py - Code for generating simulation model, compatible with MuJoCo V.3.2.7.
 - parameter_optimization.py - For running optimizations for finding optimal CPG parameter sets
 - simulation_model.xml - Example model generated using the Oripixel.py
 
