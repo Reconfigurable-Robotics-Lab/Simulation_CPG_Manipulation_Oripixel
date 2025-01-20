@@ -1,12 +1,15 @@
 # Simulation_CPG_Manipulation_Oripixel
+
 This repository includes the supplementary material for paper "CPG-Based Manipulation with Multi-Module Origami Robot Surface".
 
-# Optimized CPG Parameters for Manipulations
+## Files Description
+- Oripixel.py - Code for generating simulation model
+- parameter_optimization.py - For running optimizations for finding optimal CPG parameter sets
+- simulation_model.xml - Example model generated using the Oripixel.py
 
-## Translation and Rotation Parameters
+## Optimized CPG Parameters for Manipulations
 
 ### Fast Manipulations
-
 | Parameter | Y+ | Y- | X+ | X- | CW | CCW |
 |-----------|-----|-----|-----|-----|-----|-----|
 | h_amp | 0.0091 | 0.0140 | 0.0091 | 0.0157 | 0.0118 | 0.0118 |
@@ -19,7 +22,6 @@ This repository includes the supplementary material for paper "CPG-Based Manipul
 | ε | 0.2170 | 0.1563 | 0.2434 | 0.228 | 0.1 | 0.1 |
 
 ### Smooth Manipulations
-
 | Parameter | Y+ | Y- | X+ | X- | CW | CCW |
 |-----------|-----|-----|-----|-----|-----|-----|
 | h_amp | 0.0124 | 0.0124 | 0.0080 | 0.0086 | - | - |
