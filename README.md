@@ -1,8 +1,6 @@
 # Simulation_CPG_Manipulation_Oripixel
 [![DOI](https://zenodo.org/badge/919134462.svg)](https://doi.org/10.5281/zenodo.14726302)
 
-# Supplementary Material for "CPG-Based Manipulation with Multi-Module Origami Robot Surface"
-
 This repository includes the supplementary material for the paper:
 
 **"CPG-Based Manipulation with Multi-Module Origami Robot Surface"**  
