@@ -23,6 +23,7 @@ If you use this work, please cite it as:
       primaryClass={cs.RO},
       url={https://arxiv.org/abs/2502.19218}, 
 }
+```
 
 ## Files Description
 - Oripixel.py - Code for generating simulation model, compatible with MuJoCo V.3.2.7.
