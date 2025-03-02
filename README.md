@@ -1,12 +1,19 @@
 # Simulation_CPG_Manipulation_Oripixel
 [![DOI](https://zenodo.org/badge/919134462.svg)](https://doi.org/10.5281/zenodo.14726302)
 
-This repository includes the supplementary material for the paper "CPG-Based Manipulation with Multi-Module Origami Robot Surface".
+# Supplementary Material for "CPG-Based Manipulation with Multi-Module Origami Robot Surface"
 
-Preprint: [https://arxiv.org/abs/2502.19218]
+This repository includes the supplementary material for the paper:
 
-Citing input:
+**"CPG-Based Manipulation with Multi-Module Origami Robot Surface"**  
+Authors: Yuhao Jiang, Serge El Asmar, Ziqiao Wang, Serhat Demirtas, Jamie Paik  
+Preprint available at: [https://arxiv.org/abs/2502.19218](https://arxiv.org/abs/2502.19218)
 
+## Citation
+
+If you use this work, please cite it as:
+
+```bibtex
 @misc{jiang2025cpgbasedmanipulationmultimoduleorigami,
       title={CPG-Based Manipulation with Multi-Module Origami Robot Surface}, 
       author={Yuhao Jiang and Serge El Asmar and Ziqiao Wang and Serhat Demirtas and Jamie Paik},
@@ -16,7 +23,6 @@ Citing input:
       primaryClass={cs.RO},
       url={https://arxiv.org/abs/2502.19218}, 
 }
-
 
 ## Files Description
 - Oripixel.py - Code for generating simulation model, compatible with MuJoCo V.3.2.7.
