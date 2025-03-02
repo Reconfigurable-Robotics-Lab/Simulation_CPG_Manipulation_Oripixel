@@ -2,8 +2,11 @@
 [![DOI](https://zenodo.org/badge/919134462.svg)](https://doi.org/10.5281/zenodo.14726302)
 
 This repository includes the supplementary material for the paper "CPG-Based Manipulation with Multi-Module Origami Robot Surface".
+
 Preprint: [https://arxiv.org/abs/2502.19218]
+
 Citing input:
+
 @misc{jiang2025cpgbasedmanipulationmultimoduleorigami,
       title={CPG-Based Manipulation with Multi-Module Origami Robot Surface}, 
       author={Yuhao Jiang and Serge El Asmar and Ziqiao Wang and Serhat Demirtas and Jamie Paik},
