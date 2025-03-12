@@ -1,5 +1,5 @@
 # Simulation_CPG_Manipulation_Oripixel
-[![DOI](https://zenodo.org/badge/919134462.svg)](https://doi.org/10.5281/zenodo.14726302)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15011196.svg)](https://doi.org/10.5281/zenodo.15011196)
 
 This repository includes the supplementary material for the paper:
 
