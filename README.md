@@ -5,7 +5,7 @@ This repository includes the supplementary material for the paper:
 
 **"CPG-Based Manipulation with Multi-Module Origami Robot Surface"**  
 Authors: Yuhao Jiang, Serge El Asmar, Ziqiao Wang, Serhat Demirtas, Jamie Paik  
-*IEEE Robotics and Automation Letters (RA-L)*, 2025.  
+*IEEE Robotics and Automation Letters (RA-L)*, vol. 10, no. 5, pp. 4786-4793, May 2025.  
 DOI: [10.1109/LRA.2025.3555381](https://doi.org/10.1109/LRA.2025.3555381)
 
 ## Citation
@@ -18,10 +18,10 @@ If you use this work, please cite it as:
   journal={IEEE Robotics and Automation Letters}, 
   title={CPG-Based Manipulation With Multi-Module Origami Robot Surface}, 
   year={2025},
-  volume={},
-  number={},
-  pages={1-8},
-  keywords={Robots;Robot kinematics;Optimization;Kinematics;Couplings;Generators;Dynamics;Actuators;Prototypes;Manipulator dynamics;Soft Robot Applications;Modeling, Control, and Learning for Soft Robots;Multi-Robot Systems;Origami Robot;Surface Manipulation;Central Pattern Generator},
+  volume={10},
+  number={5},
+  pages={4786-4793},
+  keywords={Robots;Robot kinematics;Optimization;Kinematics;Couplings;Generators;Dynamics;Actuators;Prototypes;Manipulator dynamics;Soft robot applications;modeling;control;learning for soft robots;multi-robot systems;origami robot;surface manipulation;central pattern generator},
   doi={10.1109/LRA.2025.3555381}}
 
 ```
